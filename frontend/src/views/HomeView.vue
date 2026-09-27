@@ -2,6 +2,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { api } from '../api.js'
+import { statusText } from '../status.js'
 
 const router = useRouter()
 const role = ref(localStorage.getItem('role') || '')
@@ -55,7 +56,8 @@ onUnmounted(() => clearInterval(timer))
     <table border="1" cellpadding="6" style="border-collapse:collapse; width:100%;">
       <thead>
         <tr>
-          <th>编号</th><th>灯种</th><th>标称</th><th>实测</th><th>状态</th><th>结论</th><th>理由</th>
+          <th>编号</th><th>灯种</th><th>标称</th><th>实测</th><th>状态</th>
+          <th>领取人署名</th><th>署名/进程核对</th><th>结论</th><th>理由</th>
         </tr>
       </thead>
       <tbody>
@@ -69,7 +71,19 @@ onUnmounted(() => clearInterval(timer))
           <td>{{ j.lamp }}</td>
           <td>{{ j.nominal_nm }}</td>
           <td>{{ j.measured_nm }}</td>
-          <td>{{ j.status }}</td>
+          <td>{{ statusText(j.status) }}</td>
+          <td>{{ j.assignee || '—' }}</td>
+          <td>
+            <span
+              :style="{
+                padding: '1px 8px',
+                borderRadius: '10px',
+                fontSize: '12px',
+                background: j.signature_consistent ? '#d7ecd9' : '#f8d7da',
+                color: j.signature_consistent ? '#1d6b32' : '#842029',
+              }"
+            >{{ j.signature_consistent ? '一致' : '不一致' }}</span>
+          </td>
           <td>{{ j.verdict }}</td>
           <td>{{ j.reason }}</td>
         </tr>

@@ -28,12 +28,28 @@ services:
       db:
         condition: service_healthy
 
-  worker:
+  worker-a:
     build:
       context: ./backend
     command: ["python", "worker.py"]
     environment:
       DATABASE_URL: postgresql://app:app@db:5432/spectrum
+      CLAIMER_NAME: 领取员甲
+      HOLD_SECONDS: "6"
+    depends_on:
+      db:
+        condition: service_healthy
+      backend:
+        condition: service_started
+
+  worker-b:
+    build:
+      context: ./backend
+    command: ["python", "worker.py"]
+    environment:
+      DATABASE_URL: postgresql://app:app@db:5432/spectrum
+      CLAIMER_NAME: 领取员乙
+      HOLD_SECONDS: "6"
     depends_on:
       db:
         condition: service_healthy
